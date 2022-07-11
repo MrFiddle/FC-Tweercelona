@@ -89,7 +89,10 @@ def main():
 
         print("tweet n: " + str(tweet_number))
         statuses = api.user_timeline(screen_name="FabrizioRomano", tweet_mode = "extended")
-        # if statement needed above, sometimes it says the length of the array is less than 20 (the default and needed length), so we gotta solve that by just fetching all the timeline tweets again til' it's 20.
+
+        if len(statuses) < 19:
+
+            continue
 
         print("array length tweets: " + str(len(statuses)))
         latestFabrizioTweet = (statuses[tweet_number].full_text, "https://twitter.com/FabrizioRomano/status/" + str(statuses[tweet_number].id))
