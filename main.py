@@ -16,7 +16,6 @@ def main():
     lastTweetBuffer = ""
 
     api_key=os.getenv('api_key')
-    print(api_key)
     api_secret_key=os.getenv('api_secret_key')
     access_token=os.getenv('access_token')
     access_token_secret=os.getenv('access_token_secret')
