@@ -1,34 +1,27 @@
 import time
+import os
+from dotenv import load_dotenv
 import re
 import tweepy
-import requests
 import urllib.request
 from random import randrange
 
-#v2
-
-def get_credentialsInfo(credential):
-
-    cred_dict = {}
-
-    with open("./cred.txt") as f:
-        for line in f.read().split("\n"):
-
-            cred_dict[line.split("=")[0]] = line.split("=")[1]
-        
-        return cred_dict[credential]
+#.env testing
 
 def main():
+
+    load_dotenv()
 
     tweet_number = 0
     lastTweetBuffer = ""
 
-    api_key=get_credentialsInfo("api_key")
-    api_secret_key=get_credentialsInfo("api_secret_key")
-    access_token=get_credentialsInfo("access_token")
-    access_token_secret=get_credentialsInfo("access_token_secret")
-    telegram_token=get_credentialsInfo("telegram_token")
-    chat_id=get_credentialsInfo("chat_id")
+    api_key=os.getenv('api_key')
+    print(api_key)
+    api_secret_key=os.getenv('api_secret_key')
+    access_token=os.getenv('access_token')
+    access_token_secret=os.getenv('access_token_secret')
+    telegram_token=os.getenv('telegram_token')
+    chat_id=os.getenv('chat_id')
 
     auth = tweepy.OAuthHandler(api_key, api_secret_key)
     auth.set_access_token(access_token, access_token_secret)
