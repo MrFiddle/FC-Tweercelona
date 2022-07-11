@@ -5,6 +5,7 @@ import requests
 import urllib.request
 from random import randrange
 
+#v2
 
 def get_credentialsInfo(credential):
 
