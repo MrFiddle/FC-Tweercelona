@@ -55,11 +55,12 @@ def main():
 
         "lewandowski",
         "frenkie de jong",
-        "frenke",
+        "frenkie",
         "de jong",
 
         "kounde",
         "#fcb",
+        "fcb"
 
     )
 
@@ -75,7 +76,8 @@ def main():
         "cristiano",
         "ronaldo",
         "cr7",
-        "#mufc"
+        "#mufc",
+        "mufc"
 
     )
 
@@ -87,6 +89,8 @@ def main():
 
         print("tweet n: " + str(tweet_number))
         statuses = api.user_timeline(screen_name="FabrizioRomano", tweet_mode = "extended")
+        # if statement needed above, sometimes it says the length of the array is less than 20 (the default and needed length), so we gotta solve that by just fetching all the timeline tweets again til' it's 20.
+
         print("array length tweets: " + str(len(statuses)))
         latestFabrizioTweet = (statuses[tweet_number].full_text, "https://twitter.com/FabrizioRomano/status/" + str(statuses[tweet_number].id))
 
@@ -113,16 +117,13 @@ def main():
 
             for i in barcelona_keywords:
 
-                if i in latestFabrizioTweet[0].lower():
+                if re.search(r'\b' + i + r'\b', latestFabrizioTweet[0].lower()):
 
                     lastTweetBuffer = latestFabrizioTweet[0]
                     print("🚨🚨 FC BARCELONA NEWS! 🚨🚨 : " + latestFabrizioTweet[0])
                     print("LINK OF THE TWEET: " + latestFabrizioTweet[1])
 
-                    # botMessage = f'FC BARCELONA NEWS! : {latestFabrizioTweet[0]}. TWEET URL: {latestFabrizioTweet[1]}'
-
                     botMessage = f'FC BARCELONA NEWS! | TWEET URL: {latestFabrizioTweet[1]}'
-                    # botMessage = '🚨'
 
                     urlRequest = f'https://api.telegram.org/bot{telegram_token}/sendMessage?chat_id={chat_id}&text={botMessage}'
                     urlRequest = urlRequest.replace(" ", "%20")
@@ -134,16 +135,13 @@ def main():
             
             for j in united_keywords:
 
-                if j in latestFabrizioTweet[0].lower():
+                if re.search(r'\b' + j + r'\b', latestFabrizioTweet[0].lower()):
 
                     lastTweetBuffer = latestFabrizioTweet[0]
                     print("🚨🚨 MANCHESTER UNITED NEWS! 🚨🚨 : " + latestFabrizioTweet[0])
                     print("LINK OF THE TWEET: " + latestFabrizioTweet[1])
 
-                    # botMessage = f'FC BARCELONA NEWS! : {latestFabrizioTweet[0]}. TWEET URL: {latestFabrizioTweet[1]}'
-
                     botMessage = f'MANCHESTER UNITED NEWS! | TWEET URL: {latestFabrizioTweet[1]}'
-                    # botMessage = '🚨'
 
                     urlRequest = f'https://api.telegram.org/bot{telegram_token}/sendMessage?chat_id={chat_id}&text={botMessage}'
                     urlRequest = urlRequest.replace(" ", "%20")
