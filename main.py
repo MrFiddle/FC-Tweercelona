@@ -1,3 +1,5 @@
+# Juan Pablo | Mr Fiddle -w-
+
 import time
 import os
 from dotenv import load_dotenv
@@ -5,8 +7,6 @@ import re
 import tweepy
 import urllib.request
 from random import randrange
-
-#.env testing
 
 def main():
 
