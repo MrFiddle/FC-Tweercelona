@@ -1,14 +1,24 @@
 # Juan Pablo | Mr Fiddle -w-
 
 import time
+from datetime import datetime
 import os
 from dotenv import load_dotenv
 import re
 import tweepy
 import urllib.request
 from random import randrange
+import logging
+
+
 
 def main():
+
+    RT = 25
+    logging.addLevelName(RT, "RT")
+
+    logging.basicConfig(filename = 'logs.log', encoding = 'utf-8', level=logging.INFO)
+    now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     load_dotenv()
 
@@ -99,6 +109,8 @@ def main():
 
         if latestFabrizioTweet[0][0:2] == "RT":
 
+            now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            logging.log(RT, f' {now} | rt junk | {latestFabrizioTweet[1]}')
             tweet_number = tweet_number + 1
             time.sleep(2)
             continue
@@ -114,6 +126,8 @@ def main():
 
                 if re.search(r'\b' + i + r'\b', latestFabrizioTweet[0].lower()):
 
+                    now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
                     lastTweetBuffer = latestFabrizioTweet[0]
                     print("🚨🚨 FC BARCELONA NEWS! 🚨🚨 : " + latestFabrizioTweet[0])
                     print("LINK OF THE TWEET: " + latestFabrizioTweet[1])
@@ -125,12 +139,15 @@ def main():
                     urllib.request.urlopen(urlRequest)
 
                     tweet_number = 0
+                    logging.info(f' {now} | fcb pass | {latestFabrizioTweet[1]}')
 
                     break
             
             for j in united_keywords:
 
                 if re.search(r'\b' + j + r'\b', latestFabrizioTweet[0].lower()):
+
+                    now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
                     lastTweetBuffer = latestFabrizioTweet[0]
                     print("🚨🚨 MANCHESTER UNITED NEWS! 🚨🚨 : " + latestFabrizioTweet[0])
@@ -143,11 +160,14 @@ def main():
                     urllib.request.urlopen(urlRequest)
 
                     tweet_number = 0
+                    logging.info(f' {now} | mu pass | {latestFabrizioTweet[1]}')
 
                     break
 
                 else:
 
+                    now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                    logging.warning(f' {now} | junk | {latestFabrizioTweet[1]}')
                     tweet_number = 0
                     print("no barca / united tweet")
                     break
