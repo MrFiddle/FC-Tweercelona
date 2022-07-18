@@ -10,9 +10,17 @@ import urllib.request
 from random import randrange
 import logging
 
+load_dotenv()
 
+api_key=os.getenv('api_key')
+api_secret_key=os.getenv('api_secret_key')
+access_token=os.getenv('access_token')
+access_token_secret=os.getenv('access_token_secret')
+telegram_token=os.getenv('telegram_token')
+chat_id=os.getenv('chat_id')
+personal_chat_id=os.getenv('personal_chat_id')
 
-def main():
+def main(api_key, api_secret_key, access_token, access_token_secret, telegram_token, chat_id, personal_chat_id):
 
     RT = 25
     logging.addLevelName(RT, "RT")
@@ -20,17 +28,9 @@ def main():
     logging.basicConfig(filename = 'logs.log', encoding = 'utf-8', level=logging.INFO)
     now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-    load_dotenv()
 
     tweet_number = 0
     lastTweetBuffer = ""
-
-    api_key=os.getenv('api_key')
-    api_secret_key=os.getenv('api_secret_key')
-    access_token=os.getenv('access_token')
-    access_token_secret=os.getenv('access_token_secret')
-    telegram_token=os.getenv('telegram_token')
-    chat_id=os.getenv('chat_id')
 
     auth = tweepy.OAuthHandler(api_key, api_secret_key)
     auth.set_access_token(access_token, access_token_secret)
@@ -87,95 +87,122 @@ def main():
 
     while True:
 
-        odds = randrange(100)
+        try:
 
-        print("tweet n: " + str(tweet_number))
-        statuses = api.user_timeline(screen_name="FabrizioRomano", tweet_mode = "extended")
+            odds = randrange(100)
 
-        if len(statuses) < 19:
+            print("tweet n: " + str(tweet_number))
+            statuses = api.user_timeline(screen_name="FabrizioRomano", tweet_mode = "extended")
 
-            continue
+            if len(statuses) < 19:
 
-        print("array length tweets: " + str(len(statuses)))
-        latestFabrizioTweet = (statuses[tweet_number].full_text, "https://twitter.com/FabrizioRomano/status/" + str(statuses[tweet_number].id))
+                continue
 
-        if odds == 7:
+            print("array length tweets: " + str(len(statuses)))
+            latestFabrizioTweet = (statuses[tweet_number].full_text, "https://twitter.com/FabrizioRomano/status/" + str(statuses[tweet_number].id))
 
-            friendlyMessage = "Friendly reminder! : " + friendlyReminders[randrange(4)]
-            print(friendlyMessage)
-            urlRequest = f'https://api.telegram.org/bot{telegram_token}/sendMessage?chat_id={chat_id}&text={friendlyMessage}'
-            urlRequest = urlRequest.replace(" ", "%20")
-            urllib.request.urlopen(urlRequest)
+            if odds == 7:
 
-        if latestFabrizioTweet[0][0:2] == "RT":
+                friendlyMessage = "Friendly reminder! : " + friendlyReminders[randrange(4)]
+                print(friendlyMessage)
+                urlRequest = f'https://api.telegram.org/bot{telegram_token}/sendMessage?chat_id={chat_id}&text={friendlyMessage}'
+                urlRequest = urlRequest.replace(" ", "%20")
+                urllib.request.urlopen(urlRequest)
 
-            now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            logging.log(RT, f' {now} | rt junk | {latestFabrizioTweet[1]}')
-            tweet_number = tweet_number + 1
-            time.sleep(2)
-            continue
-        
-        elif latestFabrizioTweet[0] == lastTweetBuffer:
+            if latestFabrizioTweet[0][0:2] == "RT":
 
-            print("no news yet")
-            tweet_number = 0
-
-        else:
-
-            for i in barcelona_keywords:
-
-                if re.search(r'\b' + i + r'\b', latestFabrizioTweet[0].lower()):
-
-                    now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
-                    lastTweetBuffer = latestFabrizioTweet[0]
-                    print("🚨🚨 FC BARCELONA NEWS! 🚨🚨 : " + latestFabrizioTweet[0])
-                    print("LINK OF THE TWEET: " + latestFabrizioTweet[1])
-
-                    botMessage = f'FC BARCELONA NEWS! | TWEET URL: {latestFabrizioTweet[1]}'
-
-                    urlRequest = f'https://api.telegram.org/bot{telegram_token}/sendMessage?chat_id={chat_id}&text={botMessage}'
-                    urlRequest = urlRequest.replace(" ", "%20")
-                    urllib.request.urlopen(urlRequest)
-
-                    tweet_number = 0
-                    logging.info(f' {now} | fcb pass | {latestFabrizioTweet[1]}')
-
-                    break
+                now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                logging.log(RT, f' {now} | rt junk | {latestFabrizioTweet[1]}')
+                tweet_number = tweet_number + 1
+                time.sleep(2)
+                continue
             
-            for j in united_keywords:
+            elif latestFabrizioTweet[0] == lastTweetBuffer:
 
-                if re.search(r'\b' + j + r'\b', latestFabrizioTweet[0].lower()):
+                print("no news yet")
+                tweet_number = 0
 
-                    now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            else:
 
-                    lastTweetBuffer = latestFabrizioTweet[0]
-                    print("🚨🚨 MANCHESTER UNITED NEWS! 🚨🚨 : " + latestFabrizioTweet[0])
-                    print("LINK OF THE TWEET: " + latestFabrizioTweet[1])
+                for i in barcelona_keywords:
 
-                    botMessage = f'MANCHESTER UNITED NEWS! | TWEET URL: {latestFabrizioTweet[1]}'
+                    if re.search(r'\b' + i + r'\b', latestFabrizioTweet[0].lower()):
 
-                    urlRequest = f'https://api.telegram.org/bot{telegram_token}/sendMessage?chat_id={chat_id}&text={botMessage}'
-                    urlRequest = urlRequest.replace(" ", "%20")
-                    urllib.request.urlopen(urlRequest)
+                        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-                    tweet_number = 0
-                    logging.info(f' {now} | mu pass | {latestFabrizioTweet[1]}')
+                        lastTweetBuffer = latestFabrizioTweet[0]
+                        print("🚨🚨 FC BARCELONA NEWS! 🚨🚨 : " + latestFabrizioTweet[0])
+                        print("LINK OF THE TWEET: " + latestFabrizioTweet[1])
 
-                    break
+                        botMessage = f'FC BARCELONA NEWS! | TWEET URL: {latestFabrizioTweet[1]}'
 
-                else:
+                        urlRequest = f'https://api.telegram.org/bot{telegram_token}/sendMessage?chat_id={chat_id}&text={botMessage}'
+                        urlRequest = urlRequest.replace(" ", "%20")
+                        urllib.request.urlopen(urlRequest)
 
-                    now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                    logging.warning(f' {now} | junk | {latestFabrizioTweet[1]}')
-                    tweet_number = 0
-                    print("no barca / united tweet")
-                    break
+                        tweet_number = 0
+                        logging.info(f' {now} | fcb pass | {latestFabrizioTweet[1]}')
 
+                        break
+                
+                for j in united_keywords:
 
+                    if re.search(r'\b' + j + r'\b', latestFabrizioTweet[0].lower()):
+
+                        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+                        lastTweetBuffer = latestFabrizioTweet[0]
+                        print("🚨🚨 MANCHESTER UNITED NEWS! 🚨🚨 : " + latestFabrizioTweet[0])
+                        print("LINK OF THE TWEET: " + latestFabrizioTweet[1])
+
+                        botMessage = f'MANCHESTER UNITED NEWS! | TWEET URL: {latestFabrizioTweet[1]}'
+
+                        urlRequest = f'https://api.telegram.org/bot{telegram_token}/sendMessage?chat_id={chat_id}&text={botMessage}'
+                        urlRequest = urlRequest.replace(" ", "%20")
+                        urllib.request.urlopen(urlRequest)
+
+                        tweet_number = 0
+                        logging.info(f' {now} | mu pass | {latestFabrizioTweet[1]}')
+
+                        break
+
+                    else:
+
+                        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                        logging.warning(f' {now} | junk | {latestFabrizioTweet[1]}')
+                        tweet_number = 0
+                        print("no barca / united tweet")
+                        break
+
+            time.sleep(30)
         
-        time.sleep(30)
+        except KeyboardInterrupt:
+
+            print("nothing")
+            break
+
+        except:
+
+            bot_text = 'Bot stopped working'
+
+            print(bot_text)
+
+            urlRequestError = f'https://api.telegram.org/bot{telegram_token}/sendMessage?chat_id={personal_chat_id}&text={bot_text.replace(" ", "%20")}'
+            urllib.request.urlopen(urlRequestError)
+            break
+ 
 
 if __name__ == "__main__":
 
-    main()
+    try:
+
+        main(api_key, api_secret_key, access_token, access_token_secret, telegram_token, chat_id, personal_chat_id)
+
+    except:
+
+        bot_text = "Bot couldn't start"
+
+        print(bot_text)
+
+        urlRequestError = f'https://api.telegram.org/bot{telegram_token}/sendMessage?chat_id={chat_id}&text={bot_text.replace(" ", "%20")}'
+        urllib.request.urlopen(urlRequestError)
