@@ -89,7 +89,7 @@ def main(api_key, api_secret_key, access_token, access_token_secret, telegram_to
 
         try:
 
-            odds = randrange(100)
+            odds = randrange(500)
 
             print("tweet n: " + str(tweet_number))
             statuses = api.user_timeline(screen_name="FabrizioRomano", tweet_mode = "extended")
