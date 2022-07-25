@@ -3,3 +3,4 @@ cred.txt
 test.py
 logs.log
 puller.py
+*.bat

@@ -2,3 +2,4 @@ tweepy==4.10.0
 urllib3==1.26.10
 python-dotenv==0.20.0
 oauthlib==3.2.0
+pyTelegramBotAPI==4.6.0
