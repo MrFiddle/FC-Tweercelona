@@ -66,23 +66,6 @@ def main(api_key, api_secret_key, access_token, access_token_secret, telegram_to
 
     )
 
-    united_keywords = (
-
-        "manchester united",
-        "united",
-        "red devils",
-        "frenkie de jong",
-        "frenkie",
-        "de jong",
-        "cristiano ronaldo",
-        "cristiano",
-        "ronaldo",
-        "cr7",
-        "#mufc",
-        "mufc"
-
-    )
-
     api = tweepy.API(auth)
 
     while True:
@@ -144,34 +127,13 @@ def main(api_key, api_secret_key, access_token, access_token_secret, telegram_to
                         logging.info(f' {now} | fcb pass | {latestFabrizioTweet[1]}')
 
                         break
-                
-                for j in united_keywords:
-
-                    if re.search(r'\b' + j + r'\b', latestFabrizioTweet[0].lower()):
-
-                        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
-                        lastTweetBuffer = latestFabrizioTweet[0]
-                        print("🚨🚨 MANCHESTER UNITED NEWS! 🚨🚨 : " + latestFabrizioTweet[0])
-                        print("LINK OF THE TWEET: " + latestFabrizioTweet[1])
-
-                        botMessage = f'MANCHESTER UNITED NEWS! | TWEET URL: {latestFabrizioTweet[1]}'
-
-                        urlRequest = f'https://api.telegram.org/bot{telegram_token}/sendMessage?chat_id={chat_id}&text={botMessage}'
-                        urlRequest = urlRequest.replace(" ", "%20")
-                        urllib.request.urlopen(urlRequest)
-
-                        tweet_number = 0
-                        logging.info(f' {now} | mu pass | {latestFabrizioTweet[1]}')
-
-                        break
 
                     else:
 
                         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                         logging.warning(f' {now} | junk | {latestFabrizioTweet[1]}')
                         tweet_number = 0
-                        print("no barca / united tweet")
+                        print("no barca tweet")
                         break
 
             time.sleep(30)
@@ -206,3 +168,6 @@ if __name__ == "__main__":
 
         urlRequestError = f'https://api.telegram.org/bot{telegram_token}/sendMessage?chat_id={chat_id}&text={bot_text.replace(" ", "%20")}'
         urllib.request.urlopen(urlRequestError)
+
+
+        
